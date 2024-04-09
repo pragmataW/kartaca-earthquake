@@ -1,4 +1,4 @@
-package commonobj
+package models
 
 type CouldNotConnectedToBrokerError struct{
 	Message string

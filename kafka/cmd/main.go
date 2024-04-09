@@ -7,14 +7,14 @@ import (
 	"github.com/IBM/sarama"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
-	kafkacontroller "github.com/pragmataW/kartaca-earthquake/controllers/kafka_controller"
-	"github.com/pragmataW/kartaca-earthquake/services/kafka"
+	kafkacontroller "github.com/pragmataW/kartaca-earthquake/kafka/controller"
+	"github.com/pragmataW/kartaca-earthquake/kafka/service"
 )
 
 var brokerAddr string
 
 func main() {
-	var kafkaService kafka.KafkaService
+	var kafkaService service.KafkaService
 	sarama.Logger = log.New(os.Stdout, "[sarama] ", log.LstdFlags)
 
 	KafkaController := kafkacontroller.KafkaController{
@@ -28,7 +28,7 @@ func main() {
 }
 
 func init() {
-	if err := godotenv.Load("../../.env"); err != nil {
+	if err := godotenv.Load("../.env"); err != nil {
 		log.Fatal(err)
 	}
 

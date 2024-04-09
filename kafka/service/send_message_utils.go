@@ -1,8 +1,8 @@
-package kafka
+package service
 
 import (
 	"github.com/IBM/sarama"
-	commonobj "github.com/pragmataW/kartaca-earthquake/common_obj"
+	"github.com/pragmataW/kartaca-earthquake/kafka/models"
 )
 
 //! Producer
@@ -25,7 +25,7 @@ func ConnectProducer(broker string) (sarama.SyncProducer, error){
 func PushMessageToQueue(broker string, messageStr string, topic string, partition int32) error{
 	producer, err := ConnectProducer(broker)
 	if err != nil{
-		return &commonobj.CouldNotConnectedToBrokerError{
+		return &models.CouldNotConnectedToBrokerError{
 			Message: "could not connected to broker",
 		}
 	}
@@ -38,7 +38,7 @@ func PushMessageToQueue(broker string, messageStr string, topic string, partitio
 
 	_, _, err = producer.SendMessage(message)
 	if err != nil{
-		return &commonobj.MessageCouldNotSentToKafkaError{
+		return &models.MessageCouldNotSentToKafkaError{
 			Message: "message could not sent to kafka",
 		}
 	}

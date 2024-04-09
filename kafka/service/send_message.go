@@ -1,10 +1,10 @@
-package kafka
+package service
 
 import (
 	"fmt"
 
 	"github.com/IBM/sarama"
-	commonobj "github.com/pragmataW/kartaca-earthquake/common_obj"
+	"github.com/pragmataW/kartaca-earthquake/kafka/models"
 )
 
 type KafkaService struct{}
@@ -30,7 +30,7 @@ func (k KafkaService) SendMessage(message string, broker string, topic string, p
 	}
 
 	if !isThere {
-		return &commonobj.CouldNotFindPartitionError{
+		return &models.CouldNotFindPartitionError{
 			Message: fmt.Sprintf("there is no partition id - %d", partition),
 		}
 	}

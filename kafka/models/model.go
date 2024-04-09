@@ -1,6 +1,8 @@
-package commonobj
+package models
 
 import "fmt"
+
+type KafkaService struct{}
 
 type Earthquake struct {
 	Lat 	float64	`json:"lat"`

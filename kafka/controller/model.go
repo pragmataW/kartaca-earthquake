@@ -1,4 +1,4 @@
-package kafkacontroller
+package controller
 
 type kafkaRequest struct {
 	Message		string	`json:"message"`
