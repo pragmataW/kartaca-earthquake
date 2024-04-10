@@ -7,8 +7,6 @@ import (
 	"github.com/pragmataW/kartaca-earthquake/kafka/models"
 )
 
-type KafkaService struct{}
-
 func (k KafkaService) SendMessage(message string, broker string, topic string, partition int32) error {
 	client, err := sarama.NewClient([]string{broker}, sarama.NewConfig())
 	if err != nil{

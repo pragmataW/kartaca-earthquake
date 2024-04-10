@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
@@ -11,6 +12,7 @@ func (k *KafkaController) KafkaEarthquakeController(c *fiber.Ctx) error{
 	var reqBody kafkaRequest
 
 	if err := c.BodyParser(&reqBody); err != nil{
+		fmt.Println(reqBody)
 		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
 			"response": "bad request",
 			"error": "wrong format",
