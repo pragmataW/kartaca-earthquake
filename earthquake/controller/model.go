@@ -3,8 +3,9 @@ package controller
 import "github.com/pragmataW/kartaca-earthquake/earthquake/models"
 
 type IEarthquakeService interface {
-	//CreateRandomEarthquake() error
+	CreateRandomEarthquake(kafkaEndpoint string, brokerAddr string, topic string, partition int32) (string)
 	CreateInputEarthquake(lat float64, lon float64, magnitude float64, brokerAddr string, topic string, partition int32) (models.KafkaRequest, error)
+	StopRandomEarthquake(id string) error 
 }
 
 type EarthquakeController struct {

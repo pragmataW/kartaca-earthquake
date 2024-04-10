@@ -1,12 +1,15 @@
 package models
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+)
 
 type KafkaRequest struct {
-	Message		string	`json:"message"`
-	BrokerAddr	string 	`json:"brokerAddr"`
-	Topic		string 	`json:"topic"`
-	Partition	int32	`json:"partition"`
+	Message    string `json:"message"`
+	BrokerAddr string `json:"brokerAddr"`
+	Topic      string `json:"topic"`
+	Partition  int32  `json:"partition"`
 }
 
 type Earthquake struct {
@@ -27,3 +30,16 @@ func (e *Earthquake) ControlDatas() bool {
 	}
 	return true
 }
+
+//--------------------------------------------------
+
+type Job struct {
+	Earthquake
+	Id       string
+	QuitChan chan bool
+}
+
+var (
+	Jobs      = make(map[string]*Job)
+	JobsMutex sync.Mutex
+)

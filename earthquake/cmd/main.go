@@ -11,23 +11,24 @@ import (
 )
 
 var (
-	brokerAddr		string
-	topic			string
-	kafkaEndpoint	string
+	brokerAddr    string
+	topic         string
+	kafkaEndpoint string
 )
 
 func main() {
 	service := service.EarthquakeService{}
 	controller := controller.NewEarthquakeController(service, brokerAddr, topic, kafkaEndpoint, 0)
 
-
 	app := fiber.New()
 	app.Post("/inputEarthquake", controller.InputEarthquakeController)
+	app.Post("/startRandomEarthquake", controller.StartRandomEarthquake)
+	app.Delete("/stopRandomEarthquake/:id", controller.StopRandomEarthquakeService)
 	log.Fatal(app.Listen(":3131"))
 }
 
-func init(){
-	if err := godotenv.Load("../.env"); err != nil{
+func init() {
+	if err := godotenv.Load("../.env"); err != nil {
 		log.Fatal("env load error")
 	}
 
