@@ -44,18 +44,3 @@ func PushMessageToQueue(broker string, messageStr string, topic string, partitio
 	}
 	return nil
 }
-
-//! Consumer
-
-func ConnectConsumer(broker string) (sarama.Consumer, error){
-	brokerAddr := []string{broker}
-	
-	config := sarama.NewConfig()
-	config.Consumer.Return.Errors = true
-
-	consumer, err := sarama.NewConsumer(brokerAddr, config)
-	if err != nil{
-		return nil, err
-	}
-	return consumer, err
-}
