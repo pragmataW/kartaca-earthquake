@@ -35,5 +35,3 @@ func init(){
 	topic = os.Getenv("TOPIC")
 	kafkaEndpoint = os.Getenv("KAFKA_ENDPOINT")
 }
-
-//!!! KODLAR DENENMEDİ, YARIN DENE
