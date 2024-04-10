@@ -4,7 +4,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/IBM/sarama"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 	kafkacontroller "github.com/pragmataW/kartaca-earthquake/kafka/controller"
@@ -15,7 +14,6 @@ var brokerAddr string
 
 func main() {
 	var kafkaService service.KafkaService
-	sarama.Logger = log.New(os.Stdout, "[sarama] ", log.LstdFlags)
 
 	KafkaController := kafkacontroller.KafkaController{
 		IKafkaService: kafkaService,
