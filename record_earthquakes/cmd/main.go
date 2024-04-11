@@ -6,8 +6,9 @@ import (
 	"strconv"
 
 	"github.com/joho/godotenv"
+	"github.com/pragmataW/kartaca-earthquake/record_earthquakes/service"
 	"github.com/pragmataW/kartaca-earthquake/record_earthquakes/models"
-	"github.com/pragmataW/kartaca-earthquake/record_earthquakes/repository"
+	"github.com/pragmataW/kartaca-earthquake/record_earthquakes/repo"
 )
 
 var (
@@ -22,27 +23,25 @@ var (
 )
 
 func main() {
-	repo := repository.NewRepository(models.RepoConfig{
-		Host: Host,
-		Port: Port,
-		User: User,
+	repo := repo.NewRepository(models.RepoConfig{
+		Host:     Host,
+		Port:     Port,
+		User:     User,
 		Password: Password,
-		DbName: DbName,
-		SslMode: SslMode,
-		Broker: KafkaServer,
-		Topic: Topic,
+		DbName:   DbName,
+		SslMode:  SslMode,
+		Broker:   KafkaServer,
+		Topic:    Topic,
 	})
-
-	if err := repo.InsertEarthquakeFromKafka(); err != nil{
-		panic(err)
-	}
+	srv := service.NewService(repo, KafkaServer, Topic)
+	srv.InsertEarthquakeFromKafka()
 }
 
 func init() {
-	if err := godotenv.Load("../.env"); err != nil{
+	if err := godotenv.Load("../.env"); err != nil {
 		log.Fatal(err)
 	}
-	
+
 	Host = os.Getenv("HOST")
 	User = os.Getenv("DB_USERNAME")
 	Password = os.Getenv("PASSWORD")
@@ -50,7 +49,7 @@ func init() {
 	SslMode = os.Getenv("SSL_MODE")
 	KafkaServer = os.Getenv("KAFKA_SERVER")
 	Topic = os.Getenv("TOPIC")
-	
+
 	portStr := os.Getenv("PORT")
 	Port, _ = strconv.Atoi(portStr)
 }

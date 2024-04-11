@@ -1,11 +1,13 @@
-package repository
+package repo
 
 import (
 	"database/sql"
 	"sync"
-
-	_ "github.com/lib/pq"
 )
+
+type Repo struct {
+	Db     *sql.DB
+}
 
 var (
 	repo *Repo
@@ -15,9 +17,3 @@ var (
 const (
 	insertQuery = "INSERT INTO earthquakes (lat, lon, magnitude) VALUES ($1, $2, $3)"
 )
-
-type Repo struct {
-	Db     *sql.DB
-	Broker string
-	Topic  string
-}
