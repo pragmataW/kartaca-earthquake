@@ -40,3 +40,26 @@ func (r Repo) InsertEarthquake(earthquake models.Earthquake) error {
 	}
 	return nil
 }
+
+func (r Repo) SelectEarthquake() ([]models.Earthquake, error) {
+	stmt, err := r.Db.Prepare(selectQuery)
+	if err != nil{
+		return nil, err
+	}
+
+	rows, err := stmt.Query()
+	if err != nil{
+		return nil, err
+	}
+
+	var earthquakes []models.Earthquake
+	for rows.Next() {
+		var e models.Earthquake
+		if err := rows.Scan(&e.Lat, &e.Lon, &e.Mag); err != nil{
+			return nil, err
+		}
+		earthquakes = append(earthquakes, e)
+	}
+
+	return earthquakes, nil
+}

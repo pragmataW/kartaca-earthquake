@@ -12,7 +12,7 @@ type RepoConfig struct {
 }
 
 type Earthquake struct {
-	Lat float64
-	Lon float64
-	Mag float64
+	Lat float64 `json:"lat"`
+	Lon float64 `json:"lon"`
+	Mag float64 `json:"mag"`
 }

@@ -6,14 +6,15 @@ import (
 	"sync"
 
 	"github.com/IBM/sarama"
+	"github.com/pragmataW/kartaca-earthquake/record_earthquakes/models"
 	"github.com/pragmataW/kartaca-earthquake/record_earthquakes/repo"
 )
 
 func NewService(repository *repo.Repo, broker string, topic string) RecordEarthquakeService {
 	return RecordEarthquakeService{
-		Repo: repository,
+		Repo:   repository,
 		Broker: broker,
-		Topic: topic,
+		Topic:  topic,
 	}
 }
 
@@ -55,4 +56,12 @@ func (s RecordEarthquakeService) InsertEarthquakeFromKafka() error {
 
 	wg.Wait()
 	return nil
+}
+
+func (s RecordEarthquakeService) SelectEarthquakeFromSql() ([]models.Earthquake, error) {
+	ret, err := s.Repo.SelectEarthquake()
+	if err != nil {
+		return nil, err
+	}
+	return ret, nil
 }

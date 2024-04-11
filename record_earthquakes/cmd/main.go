@@ -5,10 +5,12 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
-	"github.com/pragmataW/kartaca-earthquake/record_earthquakes/service"
+	"github.com/pragmataW/kartaca-earthquake/record_earthquakes/controller"
 	"github.com/pragmataW/kartaca-earthquake/record_earthquakes/models"
 	"github.com/pragmataW/kartaca-earthquake/record_earthquakes/repo"
+	"github.com/pragmataW/kartaca-earthquake/record_earthquakes/service"
 )
 
 var (
@@ -34,7 +36,15 @@ func main() {
 		Topic:    Topic,
 	})
 	srv := service.NewService(repo, KafkaServer, Topic)
-	srv.InsertEarthquakeFromKafka()
+	ctrlr := controller.NewController(srv)
+
+	go func(){
+		srv.InsertEarthquakeFromKafka()
+	}()
+
+	app := fiber.New()
+	app.Get("/getEarthquakes", ctrlr.GetEarthquakeDatas)
+	app.Listen(":3232")
 }
 
 func init() {

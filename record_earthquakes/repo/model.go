@@ -16,4 +16,5 @@ var (
 
 const (
 	insertQuery = "INSERT INTO earthquakes (lat, lon, magnitude) VALUES ($1, $2, $3)"
+	selectQuery = "SELECT lat, lon, magnitude FROM earthquakes"
 )

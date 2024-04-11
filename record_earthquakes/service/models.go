@@ -4,6 +4,7 @@ import "github.com/pragmataW/kartaca-earthquake/record_earthquakes/models"
 
 type IRecordEarthquakeRepo interface {
 	InsertEarthquake(models.Earthquake) error
+	SelectEarthquake() ([]models.Earthquake, error)
 }
 
 type RecordEarthquakeService struct {
