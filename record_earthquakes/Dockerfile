@@ -6,15 +6,15 @@ COPY go.mod go.sum ./
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o kafka_service cmd/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o record cmd/main.go
 
 FROM alpine:latest  
 RUN apk --no-cache add ca-certificates
 
 WORKDIR /root/
 
-COPY --from=builder /app/kafka_service .
+COPY --from=builder /app/record .
 
-EXPOSE 8081
+EXPOSE 8082
 
-CMD ["./kafka_service"]
+CMD ["./record"]

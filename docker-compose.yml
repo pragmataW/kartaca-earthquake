@@ -1,0 +1,86 @@
+version: '3.7'
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_LOG_DIRS: "/var/lib/kafka/data"
+    healthcheck:
+      test: ["CMD", "kafka-topics", "--bootstrap-server", "localhost:9092", "--list"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "9092:9092"
+
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123wsedrf
+      POSTGRES_DB: earthquake
+    ports:
+      - "5431:5432"
+    volumes:
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  earthquake:
+    build:
+      context: ./earthquake
+      dockerfile: Dockerfile
+    environment:
+      BROKER_ADDR: kafka:9092
+      TOPIC: earthquake
+      KAFKA_ENDPOINT: http://kafka_service:3030/sendMessageToKafka
+    ports:
+      - "8080:3131"
+
+  kafka_service:
+    build:
+      context: ./kafka_message
+      dockerfile: Dockerfile
+    depends_on:
+      - kafka
+    ports:
+      - "8081:3030"
+
+  record:
+    build:
+      context: ./record_earthquakes
+      dockerfile: Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    environment:
+      HOST: "postgres"
+      PORT: "5432"
+      DB_USERNAME: "postgres"
+      PASSWORD: "123wsedrf"
+      DB_NAME: "earthquake"
+      SSL_MODE: "disable"
+      KAFKA_SERVER: "kafka:9092"
+      TOPIC: "earthquake"
+    ports:
+      - "8082:3232"

@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/joho/godotenv"
 	"github.com/pragmataW/kartaca-earthquake/earthquake/controller"
 	"github.com/pragmataW/kartaca-earthquake/earthquake/service"
 )
@@ -28,10 +27,6 @@ func main() {
 }
 
 func init() {
-	if err := godotenv.Load("../.env"); err != nil {
-		log.Fatal("env load error")
-	}
-
 	brokerAddr = os.Getenv("BROKER_ADDR")
 	topic = os.Getenv("TOPIC")
 	kafkaEndpoint = os.Getenv("KAFKA_ENDPOINT")

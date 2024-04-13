@@ -23,7 +23,7 @@ func (s RecordEarthquakeService) InsertEarthquakeFromKafka() error {
 	if err != nil {
 		return err
 	}
-	consumer, err := worker.ConsumePartition(s.Topic, 0, sarama.OffsetOldest)
+	consumer, err := worker.ConsumePartition(s.Topic, 0, sarama.OffsetNewest)
 	if err != nil {
 		return err
 	}

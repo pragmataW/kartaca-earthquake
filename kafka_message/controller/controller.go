@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/pragmataW/kafka_message/models"
+	"github.com/pragmataW/kartaca-earthquake/kafka_message/models"
 )
 
 func (k *KafkaController) KafkaEarthquakeController(c *fiber.Ctx) error {
@@ -28,7 +28,7 @@ func (k *KafkaController) KafkaEarthquakeController(c *fiber.Ctx) error {
 		} else if _, ok := err.(*models.MessageCouldNotSentToKafkaError); ok {
 			return c.Status(http.StatusUnprocessableEntity).JSON(fiber.Map{
 				"response": "unprocessable entity",
-				"error":    "incorrect topic name",
+				"error":    "incorrect topic name " + fmt.Sprintf("%v", err),
 			})
 		} else if _, ok := err.(*models.CouldNotFindPartitionError); ok {
 			return c.Status(http.StatusUnprocessableEntity).JSON(fiber.Map{

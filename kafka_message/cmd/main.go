@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 	"github.com/gofiber/fiber/v2"
-	kafkacontroller "github.com/pragmataW/kafka_message/controller"
-	"github.com/pragmataW/kafka_message/service"
+	kafkacontroller "github.com/pragmataW/kartaca-earthquake/kafka_message/controller"
+	"github.com/pragmataW/kartaca-earthquake/kafka_message/service"
 )
 
 func main() {

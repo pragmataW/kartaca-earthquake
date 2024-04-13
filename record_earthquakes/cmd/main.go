@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/joho/godotenv"
 	"github.com/pragmataW/kartaca-earthquake/record_earthquakes/controller"
 	"github.com/pragmataW/kartaca-earthquake/record_earthquakes/models"
 	"github.com/pragmataW/kartaca-earthquake/record_earthquakes/repo"
@@ -38,8 +37,10 @@ func main() {
 	srv := service.NewService(repo, KafkaServer, Topic)
 	ctrlr := controller.NewController(srv)
 
-	go func(){
-		srv.InsertEarthquakeFromKafka()
+	go func() {
+		if err := srv.InsertEarthquakeFromKafka(); err != nil {
+			log.Fatal(err)
+		}
 	}()
 
 	app := fiber.New()
@@ -48,10 +49,6 @@ func main() {
 }
 
 func init() {
-	if err := godotenv.Load("../.env"); err != nil {
-		log.Fatal(err)
-	}
-
 	Host = os.Getenv("HOST")
 	User = os.Getenv("DB_USERNAME")
 	Password = os.Getenv("PASSWORD")

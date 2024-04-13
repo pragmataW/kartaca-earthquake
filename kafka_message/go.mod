@@ -1,10 +1,10 @@
-module github.com/pragmataW/kafka_message
+module github.com/pragmataW/kartaca-earthquake/kafka_message
 
 go 1.22.0
 
 require (
-	github.com/IBM/sarama v1.43.1
-	github.com/gofiber/fiber/v2 v2.52.4
+	github.com/IBM/sarama v1.43.1 // direct
+	github.com/gofiber/fiber/v2 v2.52.4 // direct
 )
 
 require (

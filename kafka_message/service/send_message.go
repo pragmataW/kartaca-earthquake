@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/IBM/sarama"
-	"github.com/pragmataW/kafka_message/models"
+	"github.com/pragmataW/kartaca-earthquake/kafka_message/models"
 )
 
 func (k KafkaService) SendMessage(message string, broker string, topic string, partition int32) error {
