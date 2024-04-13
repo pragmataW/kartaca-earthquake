@@ -8,11 +8,17 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
+    healthcheck:
+      test: ["CMD", "echo", "ruok", "|", "nc", "localhost", "2181", "|", "grep", "imok"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   kafka:
     image: confluentinc/cp-kafka:latest
     depends_on:
-      - zookeeper
+      zookeeper:
+        condition: service_healthy
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -22,9 +28,9 @@ services:
       KAFKA_LOG_DIRS: "/var/lib/kafka/data"
     healthcheck:
       test: ["CMD", "kafka-topics", "--bootstrap-server", "localhost:9092", "--list"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 30s
+      timeout: 10s
+      retries: 3
     ports:
       - "9092:9092"
 
