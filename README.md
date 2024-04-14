@@ -1,20 +1,20 @@
-Servisler:
+<h1>Servisler:</h1>
 
-Kafka servisi: 
-Kafka servisinin temel amacı diğer servislerden http requesti ile mesaj alıp localhost:9092 portunda çalışan kafka broker'ına ileterek
+<h2>Kafka servisi:</h2> 
+Kafka servisinin temel amacı diğer servislerden http requesti ile mesaj alıp kafka broker'ına ileterek
 mesajı kuyruklamaktır. Diğer servisler de bu broker'a bağlanıp mesajları consume edebilir. 
 
-Endpoint: 
+<h3>Endpoint:</h3>
 POST localhost:8081/sendMessageToKafka
 
-Örnek request body:
+<h3>Örnek request body:</h3>
 {
-    "message": "lat:-80.084128,lon:32.590355,mag:8.544139", //mesajımız (consume eden servise göre formatlanır,consume edecek servisler bu formatta işleyecek)
-    "brokerAddr": "kafka:9092",  							//istek atılacak broker
-    "topic": "earthquake",									//mesaj gönderilecek topic
-    "partition": 0											//mesaj gönderilecek partition
+    "message": "lat:-80.084128,lon:32.590355,mag:8.544139", //mesajımız (bu formatta olmalı) <br>
+    "brokerAddr": "kafka:9092",  							//istek atılacak broker <br>
+    "topic": "earthquake",									//mesaj gönderilecek topic <br>
+    "partition": 0											//mesaj gönderilecek partition <br>
 }
-Response listesi:
+<h3>Response listesi:</h3>
 -StatusBadRequest -> gönderilen request yanlış formatlanırsa
 -StatusUnprocessableEntity -> belirtilen broker, topic veya partition yoksa
 -InternalServerError -> request kaynaklı  değil, server kaynaklı bir sorun oluştuysa
@@ -22,46 +22,42 @@ Response listesi:
 
 --------------------------------------------------------------------------------------------
 
-Earthquake servisi:
+<h2>Earthquake servisi:</h2>
 Earthquake servisi kafka servisine mesaj produce eder. 3 adet endpoint bulunmakta. "localhost:8080/inputEarthquake" json olarak kullanıcıdan deprem verileri girmesini  ister, "localhost:8080/startRandomEarthquake" 2 saniyede bir sürekli rastgele deprem oluşturur ve bize deprem oluşturmayı durdurmak için bir id döner, 
 "localhost:8080/stopRandomEarthquake/id" ise bizden id'yi alır ve deprem üretmeyi durdurur.
 
-Endpoint:
+<h3>Endpoint:</h3>
 POST localhost:8080/inputEarthquake
 
-Örnek request body:
+<h3>Örnek request body:</h3>
 {
     "lat": 24.771959, //enlem verisi
     "lon": 46.217018, //boylam verisi
     "mag": 8		  //deprem şiddeti
 }
 
-Response listesi
+<h3>Response listesi</h3>
 -StatusBadRequest -> gönderilen request yanlış formatlanırsa
 -StatusUnprocessableEntity -> enlem, boylam, şiddet verileri yanlış aralıktaysa (min magnitude = 1, max magnitude = 10)
 -StatusInternalServerError -> kafka servisine http requesti yollayamıyorsa
 -StatusOk -> Deprem başarıyla oluştuysa
 
-**********************************
-
-Endpoint:
+<h3>Endpoint:</h3>
 POST localhost:8080/startRandomEarthquake
 
-Örnek request body
+<h3>Örnek request body</h3>
 Body gönderilmez
 
-Response listesi:
+<h3>Response listesi:</h3>
 id -> deprem oluşturucunun id'si, durdurmak için bu id'yi kullanırız.
 
-**********************************
-
-Endpoint
+<h3>Endpoint</h3>
 DEL localhost:8080/stopRandomEarthquake/id
 
-Örnek request body
+</h3>Örnek request body</h3>
 Body gönderilmez
 
-Response listesi:
+</h3>Response listesi:</h3>
 StatusBadRequest -> id gönderilmediyse
 StatusUnprocessableEntity -> olmayan bir id gönderildiyse
 StatusOK -> deprem oluşturucu başarıyla durdurulduysa
@@ -69,35 +65,37 @@ StatusOK -> deprem oluşturucu başarıyla durdurulduysa
 ----------------------------------------------------------------------------------------------
 
 
-Record_earthquake servisi
+<h2>Record_earthquake servisi</h2>
 Bu servis kafka broker'da kuyruklanmış tüm verileri consume eder ve postgresql database'inde depolar. 
 
-Endpoint:
+<h3>Endpoint:</h3>
 GET localhost:8082/getEarthquakes
 
-Örnek request body
+<h3>Örnek request body</h3>
 Body gönderilmez
 
-Response listesi:
+<h3>Response listesi:</h3>
 StatusInternalServerError -> database'den veri çekerken hata oluşursa
 StatusOK -> veriler başarıyla getirilirse
 
 ---------------------------------------------------------------------------------------------
 
-Filtering Earthquake servisi
+<h2>Filtering Earthquake servisi</h2>
 Bu servis de kafkada kuyruklanmış verileri consume eder, ancak verileri consume ederken yalnızca 3.0'dan büyük depremleri önemser ve SSE (server sent event) bağlantısı açarak front-end'e oluşturulan depremlerin geohash değerini ve o geohash'da kaç deprem olduğunu döndürür. Geohash doğruluğu 4 karakter olarak ayarlanmıştır, 40 km ve çevresindeki depremleri aynı bölge olarak sayar. Front-end'de de istek atılırken geohash karakterinin 4 olarak ayarlanması gerekmektedir.
 
-Endpoint:
+<h3>Endpoint:</h3>
 localhost:6663/events/message -> SSE'e bağlanmak için
 
-Response listesi
+<h3>Response listesi</h3>
 "geohash,deprem_sayisi" döner örnek olarak "3daw1,3" şeklinde veriler döner
 
-
-******************************
-
-Endpoint:
+<h3>Endpoint:</h3>
 localhost:6663/getOldKeys -> client SSE'e bağlanmamışken oluşturulan geohash'leri döner
 
-Response listesi:
+<h3>Response listesi:</h3>
 -
+<br><br>
+<h1>Kullanım:</h1>
+git clone git@github.com:pragmataW/kartaca-earthquake.git <br>
+cd kartaca-earthquake <br>
+docker-compose up <br>
