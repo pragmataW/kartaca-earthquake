@@ -24,7 +24,7 @@ func main() {
 	defer s.Shutdown()
 
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:120"},
+		AllowedOrigins:   []string{"*"},
 		AllowCredentials: true,
 		AllowedHeaders:   []string{"Content-Type"},
 	})
@@ -45,7 +45,9 @@ func main() {
 	http.Handle("/events/", handler)
 	
 	cntrl.HandleEvents()
-	http.HandleFunc("/getOldKeys", cntrl.GetOldKeys)
+
+	getOldKeysCORS := c.Handler(http.HandlerFunc(cntrl.GetOldKeys))
+    http.Handle("/getOldKeys", getOldKeysCORS)
 
 	http.ListenAndServe(":6663", nil)
 }

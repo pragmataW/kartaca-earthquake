@@ -104,3 +104,13 @@ services:
       PARTITION: "0"
     ports:
         - "6663:6663"
+
+  nginx:
+    build:
+      context: ./front-end
+      dockerfile: Dockerfile
+    ports:
+      - "122:80"
+    depends_on:
+      - filter
+    
